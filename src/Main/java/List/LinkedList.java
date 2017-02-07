@@ -19,14 +19,13 @@ public class LinkedList<T> implements IList<T> {
     }
 
     @Override
-    public Boolean insert(T value, int position) {
+    public void insert(T value, int position) {
         if(!isPositionCorrect(position))
-            return false;
+            throw new ArrayIndexOutOfBoundsException(position);
         if(position == 0){
             Node<T> insert = new Node(value);
             insert.next = head;
             head = insert;
-            return true;
         }
         int count = 0;
         Node<T> previous = head;
@@ -36,45 +35,36 @@ public class LinkedList<T> implements IList<T> {
         Node<T> insert = new Node(value);
         insert.next = previous.next;
         previous.next = insert;
-        return true;
     }
 
     @Override
-    public Boolean remove(int position) {
+    public void remove(int position) {
         if(!isPositionCorrect(position))
-            return false;
+            throw new ArrayIndexOutOfBoundsException(position);
         Node previous = getElementOnCurrentPosition(position - 1);
         Node current = previous.next;
         previous.next = current.next;
-        return true;
     }
 
     @Override
     public T get(int position) {
         if(!isPositionCorrect(position))
-            return null;
-        Node temp = head;
-        temp = getElementOnCurrentPosition(position);
+            throw new ArrayIndexOutOfBoundsException(position);
+        Node temp = getElementOnCurrentPosition(position);
         return (T) temp.data;
     }
 
     @Override
-    public Boolean set(T value, int position) {
+    public void set(T value, int position) {
         if(!isPositionCorrect(position))
-            return false;
+            throw new ArrayIndexOutOfBoundsException(position);
         Node temp = getElementOnCurrentPosition(position);
         temp.data = value;
-        return true;
     }
 
     @Override
     public void clear() {
         head = null;
-    }
-
-    @Override
-    public IList clone() {
-        return null;
     }
 
     @Override
