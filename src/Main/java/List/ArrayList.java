@@ -4,14 +4,13 @@ import java.util.Arrays;
  * Created by Taras on 02.12.2016.
  */
 public class ArrayList<T> implements IList<T> {
-    private T[] array;
+    private Object[] array;
     private int size;
     private int capacity;
 
-    public ArrayList(int size) throws ClassCastException {
+    public ArrayList(int size) {
         capacity = size;
-        this.size = 0;
-        array = (T[]) new Object[capacity];
+        array = new Object[capacity];
     }
 
     @Override
@@ -22,9 +21,9 @@ public class ArrayList<T> implements IList<T> {
     }
 
     @Override
-    public Boolean insert(T value, int position) {
+    public void insert(T value, int position) {
         if(!isPositionCorrect(position))
-            return false;
+            throw new IndexOutOfBoundsException();
         makeArrayExtendingIfNeeded();
 //        for(int i = size; i > position; i--){
 //            array[i] = array[i - 1];
@@ -32,37 +31,36 @@ public class ArrayList<T> implements IList<T> {
         System.arraycopy(array, position, array, position + 1, size - position);
         array[position] = value;
         size++;
-        return true;
     }
 
     @Override
-    public Boolean remove(int position) {
+    public void remove(int position) {
         if(!isPositionCorrect(position))
-            return false;
+            throw new IndexOutOfBoundsException();
         makeArrayExtendingIfNeeded();
 //        for(int i = position; i < size; i++){
 //            array[i] = array[i + 1];
 //        }
         System.arraycopy(array, position + 1, array, position, size - position - 1);
         size--;
-        return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T get(int position) {
         if(!isPositionCorrect(position))
             return null;
-        return array[position];
+        return (T) array[position];
     }
 
     @Override
-    public Boolean set(T value, int position) {
+    public void set(T value, int position) {
         if(!isPositionCorrect(position))
-            return false;
+            throw new IndexOutOfBoundsException();
         array[position] = value;
-        return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void clear() {
         array = (T[]) new Object[10];
@@ -70,14 +68,10 @@ public class ArrayList<T> implements IList<T> {
         capacity = 0;
     }
 
-    @Override
-    public IList clone() {
-        return null;
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
     public T[] toArray() {
-        return Arrays.copyOfRange(array, 0, size - 1);
+        return Arrays.copyOfRange((T[]) array, 0, size - 1);
     }
 
     @Override
