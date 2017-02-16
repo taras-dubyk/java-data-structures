@@ -3,6 +3,7 @@
  */
 public class LinkedList<T> implements IList<T> {
     private Node<T> head = null;
+    private Node<T> tail = null;
     private int size = 0;
 
     private static class Node<T> {
@@ -18,21 +19,23 @@ public class LinkedList<T> implements IList<T> {
     public void add(T value) {
         if(head == null){
             head = new Node<>(value);
+            tail = head;
         }
         else {
-            Node<T> tail = head;
-            while (tail.next != null){
-                tail = tail.next;
-            }
+//            Node<T> tail = head;
+//            while (tail.next != null){
+//                tail = tail.next;
+//            }
             tail.next = new Node<>(value);
+            tail = tail.next;
         }
         size++;
     }
 
     @Override
     public void insert(T value, int position) {
-        if(!isPositionCorrect(position))
-            throw new ArrayIndexOutOfBoundsException(position);
+        if(!isPositionCorrect(position) && position != 0)
+            throw new IndexOutOfBoundsException();
         if(position == 0){
             Node<T> insert = new Node<T>(value);
             insert.next = head;
@@ -42,6 +45,7 @@ public class LinkedList<T> implements IList<T> {
         Node<T> previous = head;
         while (count < position - 1){
             previous = previous.next;
+            count++;
         }
         Node<T> insert = new Node<>(value);
         insert.next = previous.next;
@@ -52,11 +56,19 @@ public class LinkedList<T> implements IList<T> {
     @Override
     public void remove(int position) {
         if(!isPositionCorrect(position))
-            throw new ArrayIndexOutOfBoundsException(position);
+            throw new IndexOutOfBoundsException();
+        if(position == 0) {
+            head = head.next;
+            size--;
+            return;
+        }
         Node previous = getElementOnCurrentPosition(position - 1);
         Node current = previous.next;
         previous.next = current.next;
         size--;
+        if(position == size - 2) {
+            tail = previous.next;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -102,7 +114,7 @@ public class LinkedList<T> implements IList<T> {
     }
 
     private Node getElementOnCurrentPosition(int position){
-        Node temp = head;
+        Node<T> temp = head;
         for(int i=0; i < position; i++){
             temp = temp.next;
         }
